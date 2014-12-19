@@ -14,7 +14,6 @@ class PerformanceMetricsPagesMigration extends \Db\Migration {
       time_taken int not null,
 
       script_name varchar(255) null,      -- might be null if running from CLI; probably not though
-      is_logged_in tinyint not null,
 
       -- timed_sql
       db_prepares int null,
