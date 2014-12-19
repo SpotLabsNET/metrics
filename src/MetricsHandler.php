@@ -20,12 +20,12 @@ class MetricsHandler {
       'db_prepare_count' => 0,
       'db_execute_count' => 0,
       'db_fetch_count' => 0,
-      'db_fetchall_count' => 0,
+      'db_fetch_all_count' => 0,
 
       'db_prepare_time' => 0,
       'db_execute_time' => 0,
       'db_fetch_time' => 0,
-      'db_fetchall_time' => 0,
+      'db_fetch_all_time' => 0,
     );
   }
 
@@ -46,8 +46,8 @@ class MetricsHandler {
         Events::on('db_execute_end', array(self::$instance, 'db_execute_end'));
         Events::on('db_fetch_start', array(self::$instance, 'db_fetch_start'));
         Events::on('db_fetch_end', array(self::$instance, 'db_fetch_end'));
-        Events::on('db_fetchall_start', array(self::$instance, 'db_fetchall_start'));
-        Events::on('db_fetchall_end', array(self::$instance, 'db_fetchall_end'));
+        Events::on('db_fetch_all_start', array(self::$instance, 'db_fetch_all_start'));
+        Events::on('db_fetch_all_end', array(self::$instance, 'db_fetch_all_end'));
       }
 
       if (Config::get('metrics_page_enabled', true)) {
@@ -90,7 +90,8 @@ class MetricsHandler {
     $q->execute($args);
     $id = $this->db->lastInsertId();
 
-    // TODO database queries
+    // TODO database query stats
+
     // TODO curl queries
   }
 
@@ -127,15 +128,15 @@ class MetricsHandler {
     $this->results['db_fetch_time'] += $time;
   }
 
-  function db_fetchall_start() {
-    $this->state['db_fetchall_start'] = microtime(true);
+  function db_fetch_all_start() {
+    $this->state['db_fetch_all_start'] = microtime(true);
   }
 
-  function db_fetchall_end() {
-    $time = microtime(true) - $this->state['db_fetchall_start'];
+  function db_fetch_all_end() {
+    $time = microtime(true) - $this->state['db_fetch_all_start'];
 
-    $this->results['db_fetchall_count']++;
-    $this->results['db_fetchall_time'] += $time;
+    $this->results['db_fetch_all_count']++;
+    $this->results['db_fetch_all_time'] += $time;
   }
 
   function getResults() {

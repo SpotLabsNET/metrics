@@ -1,3 +1,5 @@
 {
-  "\\Openclerk\\Migrations\\PerformanceMetricsPagesMigration": "\\Openclerk\\Migrations\\PerformanceMetricsPagesMigration"
+  "\\Openclerk\\Migrations\\PerformanceMetricsPagesMigration": "\\Openclerk\\Migrations\\PerformanceMetricsPagesMigration",
+  "\\Openclerk\\Migrations\\PerformanceReportsMigration": "\\Openclerk\\Migrations\\PerformanceReportsMigration",
+  "\\Openclerk\\Migrations\\PerformanceReportSlowPagesMigration": "\\Openclerk\\Migrations\\PerformanceReportSlowPagesMigration"
 }
