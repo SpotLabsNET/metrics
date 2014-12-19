@@ -1,0 +1,13 @@
+{
+  "name": "openclerk/metrics",
+  "require": {
+    "openclerk/db": "dev-master",
+    "openclerk/config": "dev-master",
+    "openclerk/events": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Openclerk\\": "src"
+    }
+  }
+}
