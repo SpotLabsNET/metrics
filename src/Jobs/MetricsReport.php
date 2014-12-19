@@ -9,7 +9,7 @@ class MetricsReport extends \Jobs\JobType {
    * @return a list of job parameters
    */
   function getPending(\Db\Connection $db) {
-    $q = $db->prepare("SELECT * FROM performance_reports WHERE created_at < DATE_SUB(NOW(), INTERVAL " . \Openclerk\Config::get("job_metrics_report_interval", 60 * 12) . " MINUTE) LIMIT 1");
+    $q = $db->prepare("SELECT * FROM performance_reports WHERE created_at > DATE_SUB(NOW(), INTERVAL " . \Openclerk\Config::get("job_metrics_report_interval", 60 * 12) . " MINUTE) LIMIT 1");
     $q->execute();
 
     if (!$q->fetch()) {

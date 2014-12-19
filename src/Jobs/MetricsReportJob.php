@@ -12,7 +12,7 @@ class MetricsReportJob extends \Jobs\JobInstance {
 
     // select the worst URLs
     $q = $db->prepare("SELECT script_name, SUM(time_taken) AS time_taken, COUNT(id) AS page_count,
-        SUM(db_execute_time) + SUM(db_fetch_time) + SUM(db_fetch_all_time) AS database_time FROM performance_metrics_pages
+        SUM(db_prepare_time) + SUM(db_execute_time) + SUM(db_fetch_time) + SUM(db_fetch_all_time) AS database_time FROM performance_metrics_pages
         GROUP BY script_name ORDER BY SUM(time_taken) / COUNT(id) LIMIT " . \Openclerk\Config::get('metrics_report_count', 20));
     $q->execute();
     $data = $q->fetchAll();

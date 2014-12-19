@@ -86,13 +86,39 @@ class MetricsHandler {
       'time_taken' => $this->results['page_time'] * 1000,
     );
 
+    // database query stats
+    $add = $this->addDatabaseStats();
+    $query .= $add['query'];
+    $args += $add['args'];
+
+    // TODO curl queries
+
     $q = $this->db->prepare($query);
     $q->execute($args);
     $id = $this->db->lastInsertId();
 
-    // TODO database query stats
 
-    // TODO curl queries
+  }
+
+  function addDatabaseStats() {
+    if (Config::get('metrics_db_enabled', true)) {
+      return array(
+        'query' => ", db_prepares=:db_prepares, db_executes=:db_executes, db_fetches=:db_fetches, db_fetch_alls=:db_fetch_alls,
+          db_prepare_time=:db_prepare_time, db_execute_time=:db_execute_time, db_fetch_time=:db_fetch_time, db_fetch_all_time=:db_fetch_all_time",
+        'args' => array(
+          'db_prepares' => $this->results['db_prepare_count'] * 1000,
+          'db_executes' => $this->results['db_execute_count'] * 1000,
+          'db_fetches' => $this->results['db_fetch_count'] * 1000,
+          'db_fetch_alls' => $this->results['db_fetch_all_count'] * 1000,
+          'db_prepare_time' => $this->results['db_prepare_time'] * 1000,
+          'db_execute_time' => $this->results['db_execute_time'] * 1000,
+          'db_fetch_time' => $this->results['db_fetch_time'] * 1000,
+          'db_fetch_all_time' => $this->results['db_fetch_all_time'] * 1000,
+        ),
+      );
+    } else {
+      return array('query' => '', 'args' => array());
+    }
   }
 
   function db_prepare_start() {
