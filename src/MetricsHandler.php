@@ -16,6 +16,17 @@ class MetricsHandler {
 
   private function __construct(\Db\Connection $db) {
     $this->db = $db;
+    $this->results = array(
+      'db_prepare_count' => 0,
+      'db_execute_count' => 0,
+      'db_fetch_count' => 0,
+      'db_fetchall_count' => 0,
+
+      'db_prepare_time' => 0,
+      'db_execute_time' => 0,
+      'db_fetch_time' => 0,
+      'db_fetchall_time' => 0,
+    );
   }
 
   static $instance = null;
@@ -31,6 +42,12 @@ class MetricsHandler {
       if (Config::get('metrics_db_enabled', true)) {
         Events::on('db_prepare_start', array(self::$instance, 'db_prepare_start'));
         Events::on('db_prepare_end', array(self::$instance, 'db_prepare_end'));
+        Events::on('db_execute_start', array(self::$instance, 'db_execute_start'));
+        Events::on('db_execute_end', array(self::$instance, 'db_execute_end'));
+        Events::on('db_fetch_start', array(self::$instance, 'db_fetch_start'));
+        Events::on('db_fetch_end', array(self::$instance, 'db_fetch_end'));
+        Events::on('db_fetchall_start', array(self::$instance, 'db_fetchall_start'));
+        Events::on('db_fetchall_end', array(self::$instance, 'db_fetchall_end'));
       }
 
       if (Config::get('metrics_page_enabled', true)) {
@@ -53,7 +70,7 @@ class MetricsHandler {
     }
 
     $this->state['page_end'] = microtime(true);
-    $this->results['page'] = $this->state['page_end'] - $this->state['page_start'];
+    $this->results['page_time'] = $this->state['page_end'] - $this->state['page_start'];
 
     // do inserts
     // "What database queries take the longest?"
@@ -66,7 +83,7 @@ class MetricsHandler {
     $query = "INSERT INTO performance_metrics_pages SET script_name=:script_name, time_taken=:time_taken";
     $args = array(
       'script_name' => isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : null,
-      'time_taken' => $this->results['page'] * 1000,
+      'time_taken' => $this->results['page_time'] * 1000,
     );
 
     $q = $this->db->prepare($query);
@@ -77,6 +94,50 @@ class MetricsHandler {
     // TODO curl queries
   }
 
+  function db_prepare_start() {
+    $this->state['db_prepare_start'] = microtime(true);
+  }
+
+  function db_prepare_end() {
+    $time = microtime(true) - $this->state['db_prepare_start'];
+
+    $this->results['db_prepare_count']++;
+    $this->results['db_prepare_time'] += $time;
+  }
+
+  function db_execute_start() {
+    $this->state['db_execute_start'] = microtime(true);
+  }
+
+  function db_execute_end() {
+    $time = microtime(true) - $this->state['db_execute_start'];
+
+    $this->results['db_execute_count']++;
+    $this->results['db_execute_time'] += $time;
+  }
+
+  function db_fetch_start() {
+    $this->state['db_fetch_start'] = microtime(true);
+  }
+
+  function db_fetch_end() {
+    $time = microtime(true) - $this->state['db_fetch_start'];
+
+    $this->results['db_fetch_count']++;
+    $this->results['db_fetch_time'] += $time;
+  }
+
+  function db_fetchall_start() {
+    $this->state['db_fetchall_start'] = microtime(true);
+  }
+
+  function db_fetchall_end() {
+    $time = microtime(true) - $this->state['db_fetchall_start'];
+
+    $this->results['db_fetchall_count']++;
+    $this->results['db_fetchall_time'] += $time;
+  }
+
   function getResults() {
     return $this->results;
   }
@@ -84,7 +145,11 @@ class MetricsHandler {
   function printResults() {
     $results = array();
     foreach ($this->results as $key => $value) {
-      $results[$key] = sprintf("%0.4f ms", $value);
+      if (substr($key, -4) == "time") {
+        $results[$key] = sprintf("%0.4f ms", $value);
+      } else {
+        $results[$key] = sprintf("%0d", $value);
+      }
     }
     return $results;
   }
