@@ -64,6 +64,9 @@ class MetricsHandler {
   }
 
   function page_end() {
+    if (!isset($this->state['page_start'])) {
+      throw new MetricsException("page_end event occured without a page_start event");
+    }
     if (isset($this->state['page_end'])) {
       // do not log twice
       throw new MetricsException("Unexpectedly measured page_end twice");
