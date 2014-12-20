@@ -1,5 +1,8 @@
 {
   "\\Openclerk\\Migrations\\PerformanceMetricsPagesMigration": "\\Openclerk\\Migrations\\PerformanceMetricsPagesMigration",
   "\\Openclerk\\Migrations\\PerformanceReportsMigration": "\\Openclerk\\Migrations\\PerformanceReportsMigration",
-  "\\Openclerk\\Migrations\\PerformanceReportSlowPagesMigration": "\\Openclerk\\Migrations\\PerformanceReportSlowPagesMigration"
+  "\\Openclerk\\Migrations\\PerformanceReportSlowPagesMigration": "\\Openclerk\\Migrations\\PerformanceReportSlowPagesMigration",
+  "\\Openclerk\\Migrations\\PerformanceMetricsUrls": "\\Openclerk\\Migrations\\PerformanceMetricsUrls",
+  "\\Openclerk\\Migrations\\PerformanceMetricsSlowUrls": "\\Openclerk\\Migrations\\PerformanceMetricsSlowUrls",
+  "\\Openclerk\\Migrations\\PerformanceMetricsRepeatedUrls": "\\Openclerk\\Migrations\\PerformanceMetricsRepeatedUrls"
 }

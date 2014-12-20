@@ -75,5 +75,5 @@ print_r(Openclerk\MetricsHandler::getInstance()->printResults());
 ## TODO
 
 1. Tests
-1. CURL metrics capture
+1. CURL report jobs
 1. How to extend your metrics capture (e.g. graphs metrics)
