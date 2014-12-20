@@ -131,11 +131,11 @@ class MetricsHandler {
 
             if ($slow_url) {
               $q = $this->db->prepare("INSERT INTO performance_metrics_slow_urls SET url_id=?, url_count=?, url_time=?, page_id=?");
-              $q->execute(array($pq['id'], $data['count'], $data['time'], $page_id));
+              $q->execute(array($pq['id'], $data['count'], $data['time'] * 1000, $page_id));
             }
             if ($repeated_url) {
               $q = $this->db->prepare("INSERT INTO performance_metrics_repeated_urls SET url_id=?, url_count=?, url_time=?, page_id=?");
-              $q->execute(array($pq['id'], $data['count'], $data['time'], $page_id));
+              $q->execute(array($pq['id'], $data['count'], $data['time'] * 1000, $page_id));
             }
 
           }
