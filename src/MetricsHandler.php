@@ -72,31 +72,32 @@ class MetricsHandler {
     $this->state['page_end'] = microtime(true);
     $this->results['page_time'] = $this->state['page_end'] - $this->state['page_start'];
 
-    // do inserts
-    // "What database queries take the longest?"
-    // "What tables take the longest to query?"
-    // "What URLs take the longest to request?"
-    // "How long does it take for a page to be generated?"
-    // "What pages are taking the longest to load?"
-    // "What pages have the most database queries?"
-    // "What pages spend the most time in PHP as opposed to the database?"
-    $query = "INSERT INTO performance_metrics_pages SET script_name=:script_name, time_taken=:time_taken";
-    $args = array(
-      'script_name' => isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : null,
-      'time_taken' => $this->results['page_time'] * 1000,
-    );
+    if (Config::get('metrics_store', false)) {
+      // do inserts
+      // "What database queries take the longest?"
+      // "What tables take the longest to query?"
+      // "What URLs take the longest to request?"
+      // "How long does it take for a page to be generated?"
+      // "What pages are taking the longest to load?"
+      // "What pages have the most database queries?"
+      // "What pages spend the most time in PHP as opposed to the database?"
+      $query = "INSERT INTO performance_metrics_pages SET script_name=:script_name, time_taken=:time_taken";
+      $args = array(
+        'script_name' => isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : null,
+        'time_taken' => $this->results['page_time'] * 1000,
+      );
 
-    // database query stats
-    $add = $this->addDatabaseStats();
-    $query .= $add['query'];
-    $args += $add['args'];
+      // database query stats
+      $add = $this->addDatabaseStats();
+      $query .= $add['query'];
+      $args += $add['args'];
 
-    // TODO curl queries
+      // TODO curl queries
 
-    $q = $this->db->prepare($query);
-    $q->execute($args);
-    $id = $this->db->lastInsertId();
-
+      $q = $this->db->prepare($query);
+      $q->execute($args);
+      $id = $this->db->lastInsertId();
+    }
 
   }
 
