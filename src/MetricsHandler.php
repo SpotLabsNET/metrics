@@ -18,6 +18,8 @@ class MetricsHandler {
     $this->db = $db;
     $this->results = array(
       'db_prepare_count' => 0,
+      'db_prepare_master_count' => 0,
+      'db_prepare_slave_count' => 0,
       'db_execute_count' => 0,
       'db_fetch_count' => 0,
       'db_fetch_all_count' => 0,
@@ -46,6 +48,8 @@ class MetricsHandler {
       if (Config::get('metrics_db_enabled', true)) {
         Events::on('db_prepare_start', array(self::$instance, 'db_prepare_start'));
         Events::on('db_prepare_end', array(self::$instance, 'db_prepare_end'));
+        Events::on('db_prepare_master', array(self::$instance, 'db_prepare_master'));
+        Events::on('db_prepare_slave', array(self::$instance, 'db_prepare_slave'));
         Events::on('db_execute_start', array(self::$instance, 'db_execute_start'));
         Events::on('db_execute_end', array(self::$instance, 'db_execute_end'));
         Events::on('db_fetch_start', array(self::$instance, 'db_fetch_start'));
@@ -177,6 +181,14 @@ class MetricsHandler {
 
     $this->results['db_prepare_count']++;
     $this->results['db_prepare_time'] += $time;
+  }
+
+  function db_prepare_master() {
+    $this->results['db_prepare_master_count']++;
+  }
+
+  function db_prepare_slave() {
+    $this->results['db_prepare_slave_count']++;
   }
 
   function db_execute_start() {
