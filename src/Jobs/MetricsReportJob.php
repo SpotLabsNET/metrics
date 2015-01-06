@@ -2,9 +2,11 @@
 
 namespace Openclerk\Jobs;
 
+use \Monolog\Logger;
+
 class MetricsReportJob extends \Jobs\JobInstance {
 
-  function run(\Db\Connection $db, \Db\Logger $logger) {
+  function run(\Db\Connection $db, Logger $logger) {
     // "What pages are taking the longest to load?"
     // "What pages spend the most time in PHP as opposed to the database?"
 
@@ -26,13 +28,13 @@ class MetricsReportJob extends \Jobs\JobInstance {
       $q->execute(array($report_id, $row['script_name'], $row['time_taken'], $row['page_count'], $row['database_time']));
     }
 
-    $logger->log("Created report '$report_type'");
+    $logger->info("Created report '$report_type'");
 
     // we've processed all the data we want; delete old metrics data
     $q = $db->prepare("DELETE FROM performance_metrics_pages");
     $q->execute();
 
-    $logger->log("Deleted old metric data");
+    $logger->info("Deleted old metric data");
   }
 
 }
