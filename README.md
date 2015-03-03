@@ -30,6 +30,7 @@ if ($migrations->hasPending(db())) {
 ## Features
 
 1. Capture runtime metrics of pages and databases (through openclerk/db)
+1. Capture runtime metrics of templates (through openclerk/pages)
 1. Optionally store runtime metrics into the database (requires migrations through component-discovery)
 1. Optionally generate performance reports (requires openclerk/jobs)
 
@@ -47,6 +48,7 @@ Openclerk\Config::merge(array(
   "metrics_enabled" => true,
   "metrics_db_enabled" => true,
   "metrics_page_enabled" => true,
+  "metrics_templates_enabled" => true,
 
   // store reports into the database
   "metrics_store" => false,

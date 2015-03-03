@@ -29,6 +29,9 @@ class MetricsHandler {
       'db_fetch_time' => 0,
       'db_fetch_all_time' => 0,
 
+      'page_template_count' => 0,
+      'page_template_time' => 0,
+
       'curl_count' => 0,
       'curl_time' => 0,
       'curl_urls' => array(),
@@ -61,6 +64,11 @@ class MetricsHandler {
       if (Config::get('metrics_page_enabled', true)) {
         Events::on('page_start', array(self::$instance, 'page_start'));
         Events::on('page_end', array(self::$instance, 'page_end'));
+      }
+
+      if (Config::get('metrics_templates_enabled', true)) {
+        Events::on('pages_template_start', array(self::$instance, 'template_start'));
+        Events::on('pages_template_end', array(self::$instance, 'template_end'));
       }
 
       if (Config::get('metrics_curl_enabled', true)) {
@@ -222,6 +230,20 @@ class MetricsHandler {
 
     $this->results['db_fetch_all_count']++;
     $this->results['db_fetch_all_time'] += $time;
+  }
+
+  function template_start($arguments) {
+    if (!isset($this->state['template_start'])) {
+      $this->state['template_start'] = array();
+    }
+    $this->state['template_start'][$arguments['template']] = microtime(true);
+  }
+
+  function template_end($arguments) {
+    $time = microtime(true) - $this->state['template_start'][$arguments['template']];
+
+    $this->results['page_template_count']++;
+    $this->results['page_template_time'] += $time;
   }
 
   function curl_start($url) {
